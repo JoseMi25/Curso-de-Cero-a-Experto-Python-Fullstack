@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center text-info mb-4">
+        Añadir Nuevo Curso
+    </h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <form method="POST" action="{{ url_for('agregar_curso') }}" class="p-4 border rounded shadow-lg bg-dark">
+                {{ form.hidden_tag() }} 
+
+                <div class="mb-3">
+                    {{ form.nombre.label(class="form-label") }}
+                    {{ form.nombre(class="form-control") }}
+                    {% for error in form.nombre.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.instructor.label(class="form-label") }}
+                    {{ form.instructor(class="form-control") }}
+                    {% for error in form.instructor.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.duracion.label(class="form-label") }}
+                    {{ form.duracion(class="form-control") }}
+                    {% for error in form.duracion.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="d-grid gap-2">
+                    {{ form.submit(class="btn btn-warning mt-3") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
