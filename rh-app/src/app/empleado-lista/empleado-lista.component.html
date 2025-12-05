@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="container text-center" style="margin: 30px">
+    <h3>Sistema de Recursos Humanos</h3>
+  </div>
+
+  <table class="table table-striped table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Empleado</th>
+        <th scope="col">Departamento</th>
+        <th scope="col">Sueldo</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (empleado of empleados(); track empleado.idEmpleado) {
+      <tr>
+        <th scope="row">{{ empleado.idEmpleado }}</th>
+        <td>{{ empleado.nombre }}</td>
+        <td>{{ empleado.departamento }}</td>
+        <td>{{ empleado.sueldo }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm me-3" 
+                  [routerLink]="['/editar-empleado', empleado.idEmpleado]">
+             Editar
+          </button>
+          
+          <button class="btn btn-danger btn-sm" 
+                  (click)="eliminarEmpleado(empleado.idEmpleado)">
+             Eliminar
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

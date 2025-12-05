@@ -6,17 +6,19 @@ def create_app():
     app = Flask(__name__)
 
     # --- CONFIGURACIÓN BASE DE DATOS ---
-    # CAMBIA 'root:admin' por tu usuario y contraseña real de MySQL
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin@localhost:3306/recursos_humanos_db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Inicializar extensiones con la app
+    # Inicializar extensiones
     db.init_app(app)
     ma.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app)
+    
+    # --- CORRECCIÓN IMPORTANTE PARA ANGULAR ---
+    # Permitir peticiones desde http://localhost:4200 (Tu Angular)
+    cors.init_app(app, resources={r"/api/*": {"origins": "http://localhost:4200"}})
 
-    # Registrar el Blueprint con el prefijo /api
+    # Registrar el Blueprint
     app.register_blueprint(api_bp, url_prefix='/api')
 
     return app

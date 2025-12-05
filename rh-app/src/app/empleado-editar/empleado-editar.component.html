@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="container text-center" style="margin: 30px">
+    <h3>Editar Empleado</h3>
+  </div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <label for="idEmpleado" class="form-label">Id</label>
+        <input type="text" class="form-control" id="idEmpleado" name="idEmpleado" [(ngModel)]="empleado.idEmpleado" disabled readonly>
+      </div>
+
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="empleado.nombre" required>
+    </div>
+    
+    <div class="mb-3">
+      <label for="departamento" class="form-label">Departamento</label>
+      <input type="text" class="form-control" id="departamento" name="departamento" [(ngModel)]="empleado.departamento" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="sueldo" class="form-label">Sueldo</label>
+      <input type="number" class="form-control" id="sueldo" name="sueldo" [(ngModel)]="empleado.sueldo" required>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-warning btn-sm me-3">Guardar</button>
+      <a href="/" class="btn btn-danger btn-sm">Cancelar</a>
+    </div>
+  </form>
+</div>
