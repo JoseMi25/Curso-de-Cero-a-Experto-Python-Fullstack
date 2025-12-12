@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Songs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-success" href="#">
+                <i class="bi bi-headphones"></i> Django Songs
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Mi Lista de Reproducción</h2>
+            <a href="{% url 'crear_cancion' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Nueva Canción
+            </a>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body p-0">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Artista</th>
+                            <th class="text-center">Popularidad</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cancion in canciones %}
+                        <tr>
+                            <td>{{ cancion.id }}</td>
+                            <td class="fw-bold">{{ cancion.titulo }}</td>
+                            <td>{{ cancion.artista }}</td>
+                            <td class="text-center">
+                                <span class="badge {% if cancion.popularidad >= 8 %}bg-success{% elif cancion.popularidad >= 5 %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ cancion.popularidad }}/10
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'editar_cancion' cancion.id %}" class="btn btn-sm btn-outline-info me-1" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-danger" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal"
+                                        data-bs-id="{{ cancion.id }}"
+                                        data-bs-nombre="{{ cancion.titulo }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                No hay canciones registradas aún.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que quieres eliminar la canción: <strong id="songName"></strong>?</p>
+                    <p class="text-muted small">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="deleteForm" method="post" action="">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const deleteModal = document.getElementById('deleteModal')
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', event => {
+                // Botón que disparó el modal
+                const button = event.relatedTarget
+                
+                // Extraer información de los atributos data-bs-*
+                const id = button.getAttribute('data-bs-id')
+                const nombre = button.getAttribute('data-bs-nombre')
+                
+                // Actualizar el contenido del modal
+                const modalTitle = deleteModal.querySelector('#songName')
+                const deleteForm = deleteModal.querySelector('#deleteForm')
+
+                modalTitle.textContent = nombre
+                // Actualizar dinámicamente la acción del formulario con el ID correcto
+                deleteForm.action = `/eliminar/${id}/`
+            })
+        }
+    </script>
+</body>
+</html>
